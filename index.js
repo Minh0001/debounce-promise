@@ -26,7 +26,6 @@ module.exports = function debounce (fn, wait = 0, options = {}) {
     }
 
     pendingArgs.push(args);
-    console.log(pendingArgs.length);
     if (options.limit && pendingArgs.length === options.limit) {
       const thisDeferred = flush();
       if (options.accumulate) {
