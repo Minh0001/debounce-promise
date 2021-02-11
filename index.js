@@ -25,7 +25,18 @@ module.exports = function debounce (fn, wait = 0, options = {}) {
       deferred = defer()
     }
 
-    pendingArgs.push(args)
+    pendingArgs.push(args);
+    console.log(pendingArgs.length);
+    if (options.limit && pendingArgs.length === options.limit) {
+      const thisDeferred = flush();
+      if (options.accumulate) {
+        const argsIndex = pendingArgs.length - 1
+        return thisDeferred.promise.then(results => results[argsIndex])
+      }
+  
+      return thisDeferred.promise
+    }
+
     timer = setTimeout(flush.bind(this), currentWait)
 
     if (options.accumulate) {
@@ -49,6 +60,8 @@ module.exports = function debounce (fn, wait = 0, options = {}) {
 
     pendingArgs = []
     deferred = null
+
+    return thisDeferred;
   }
 }
 
